@@ -1,2 +1,3 @@
 # Disease-Trends-Analysis-Medicine-Inventory-Optimization
 KIPI-Stone mini project -2
+The project began with a "Discovery" sprint to finalize use cases and select technologies. The core work of the project is outlined in subsequent sprints. Key platforms being used include Snowflake and AWS for platform setup and data processing. Data transformation is being handled using DBT and Snowflake Cortex AI is being integrated for developing AI-powered forecasting models and identifying geographic hotspots. Finally, the project includes the development of two dashboards using Tableau—one for Disease Surveillance and another for Inventory—and a Streamlit application for disease trend analysis.
