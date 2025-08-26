@@ -1,0 +1,15 @@
+name: 'Disease_trends_analysis_medicine_inventory_optimization'
+version: '1.0.0'
+config-version: 2
+
+# Match your profile name in dbt Cloud / profiles.yml
+profile: 'Disease_trends_analysis_medicine_inventory_optimization'
+
+models:
+  Disease_trends_analysis_medicine_inventory_optimization:
+    staging:
+      +materialized: view
+      +schema: STAGING   # Will go into DBT_DEV.STAGING
+    marts:
+      +materialized: table
+      +schema: MARTS     # Will go into DBT_DEV.MARTS
