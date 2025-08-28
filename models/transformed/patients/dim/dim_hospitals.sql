@@ -5,20 +5,49 @@
 ) }}
 
 select
+    -- Keys
     hospital_id,
+
+    -- Basic Info
     hospital_name,
-    email,
-    bed_capacity,
-    established_year,
     hospital_location,
     city,
     state,
     region,
+
+    -- Classification
     tier,
     pincode,
     hospital_type,
     hospital_tier,
+
+    -- Infrastructure
+    bed_capacity,
+    established_year,
+
+    -- Geographic
     latitude,
     longitude,
-    contact_phone
+
+    -- Contact
+    contact_phone,
+    email,
+
+    -- Derived Geographic
+    case 
+        when lower(tier) = 'tier 1' then 1
+        when lower(tier) = 'tier 2' then 2
+        when lower(tier) = 'tier 3' then 3
+        else null
+    end as tier_numeric,
+    distance_from_major_city,
+
+    -- Audit
+    effective_date,
+    expiry_date,
+    case
+        when expiry_date is null or expiry_date >= current_date then true
+        else false
+    end as is_current
+
 from {{ ref('stg_hospitals') }}
