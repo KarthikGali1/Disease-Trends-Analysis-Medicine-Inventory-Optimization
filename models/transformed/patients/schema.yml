@@ -2,164 +2,212 @@ version: 2
 
 models:
 
+  # -----------------
   # DIMENSIONS
-
+  # -----------------
   - name: dim_patients
-    description: "Dimension table containing patient demographics and registration details."
+    description: "Patient dimension with demographics, contact info, insurance, emergency contact, and audit columns."
     columns:
       - name: patient_id
-        description: "Unique identifier for each patient"
+        description: "Business key for patient."
         tests: [not_null, unique]
+      - name: patient_name
+        description: "Full name of patient."
+      - name: patient_age
+        description: "Age of patient."
       - name: patient_gender
-        description: "Normalized gender values"
+        description: "Gender of patient."
         tests:
           - accepted_values:
-              values: ["Male", "Female", "Other"]
+              values: ['Male', 'Female', 'Other']
+      - name: blood_group
+        description: "Blood group of patient."
+      - name: insurance_provider
+        description: "Insurance provider, if available."
+      - name: govt_scheme
+        description: "Government scheme eligibility."
+      - name: age_group
+        description: "Derived classification: Child / Adult / Senior."
+      - name: registration_date
+        description: "Patient registration date."
+      - name: is_current
+        description: "Flag indicating if the record is active."
 
-  - name: dim_diseases
-    description: "Dimension table containing disease reference data."
-    columns:
-      - name: disease_id
-        description: "Unique identifier for disease"
-        tests: [not_null, unique]
-      - name: disease_name
-        description: "Cleaned disease name"
-
-  - name: dim_hospitals
-    description: "Dimension table containing hospital reference data."
+  - name: dim_hospital
+    description: "Hospital dimension with classification, infrastructure, and contact details."
     columns:
       - name: hospital_id
-        description: "Unique identifier for hospital"
+        description: "Business key for hospital."
         tests: [not_null, unique]
       - name: hospital_name
-        description: "Name of the hospital"
+        description: "Name of hospital."
+      - name: hospital_location
+        description: "Location of hospital."
+      - name: tier
+        description: "Tier classification."
+      - name: bed_capacity
+        description: "Total bed capacity."
+      - name: established_year
+        description: "Year of establishment."
+      - name: is_current
+        description: "Flag indicating if record is active."
 
-  - name: dim_geography
-    description: "Dimension table containing geographic details at region/state/city level."
+  - name: dim_disease
+    description: "Disease dimension with classification, patterns, thresholds, and audit details."
+    columns:
+      - name: disease_id
+        description: "Business key for disease."
+        tests: [not_null, unique]
+      - name: disease_name
+        description: "Disease name."
+      - name: disease_category
+        description: "Category of disease."
+      - name: severity_levels
+        description: "Severity levels associated with the disease."
+      - name: transmission_type
+        description: "Mode of transmission."
+      - name: outbreak_threshold
+        description: "Threshold for outbreak identification."
+      - name: is_current
+        description: "Flag indicating if record is active."
+
+  - name: dim_geographic
+    description: "Geographic dimension containing administrative, coordinates, demographics, and infrastructure."
     columns:
       - name: region_id
-        description: "Unique identifier for geographic region"
+        description: "Business key for region."
         tests: [not_null, unique]
       - name: state
-        description: "State name"
+        description: "State name."
       - name: city
-        description: "City name"
+        description: "City name."
+      - name: population_density
+        description: "Population density of the region."
+      - name: healthcare_facilities_count
+        description: "Number of healthcare facilities in the region."
+      - name: pharmacy_count
+        description: "Number of pharmacies in the region."
+      - name: is_current
+        description: "Flag indicating if record is active."
 
+  - name: dim_drugs
+    description: "Medicine/Drug dimension with manufacturing, storage, dosage, prescription, classification, and audit details."
+    columns:
+      - name: medicine_id
+        description: "Business key for medicine."
+        tests: [not_null, unique]
+      - name: generic_name
+        description: "Generic name of the medicine."
+      - name: therapeutic_class
+        description: "Therapeutic class."
+      - name: manufacturer
+        description: "Drug manufacturer."
+      - name: shelf_life_months
+        description: "Shelf life in months."
+      - name: storage_temperature
+        description: "Storage requirements."
+      - name: prescription_required
+        description: "Whether prescription is mandatory."
+      - name: medicine_category
+        description: "Medicine category classification."
+      - name: is_current
+        description: "Flag indicating if record is active."
+
+  # -----------------
   # FACTS
-
-  - name: fact_patient_visits
-    description: "Fact table for hospital visits, admissions, discharges, and outcomes."
+  # -----------------
+  - name: fact_healthcare_surveillance
+    description: "Fact table capturing disease surveillance events, outcomes, and environmental context."
     columns:
       - name: surveillance_id
-        description: "Unique identifier for surveillance record"
+        description: "Unique identifier for surveillance record."
         tests: [not_null, unique]
-      - name: patient_id
-        description: "Foreign key to dim_patients"
+      - name: date_key
+        description: "FK to date dimension (transaction date)."
+      - name: patient_key
+        description: "FK to dim_patients."
         tests:
           - relationships:
               to: ref('dim_patients')
               field: patient_id
-      - name: hospital_id
-        description: "Foreign key to dim_hospitals"
+      - name: hospital_key
+        description: "FK to dim_hospital."
         tests:
           - relationships:
-              to: ref('dim_hospitals')
+              to: ref('dim_hospital')
               field: hospital_id
-      - name: disease_id
-        description: "Foreign key to dim_diseases"
+      - name: disease_key
+        description: "FK to dim_disease."
         tests:
           - relationships:
-              to: ref('dim_diseases')
+              to: ref('dim_disease')
               field: disease_id
-      - name: region_id
-        description: "Foreign key to dim_geography"
+      - name: geographic_key
+        description: "FK to dim_geographic."
         tests:
           - relationships:
-              to: ref('dim_geography')
+              to: ref('dim_geographic')
               field: region_id
+      - name: case_count
+        description: "Number of cases."
+      - name: length_of_stay_days
+        description: "Length of stay in days."
+      - name: severity_level
+        description: "Severity of disease."
+      - name: outcome
+        description: "Patient outcome (Recovered/Death/Other)."
+      - name: weather
+        description: "Weather during event."
+      - name: aqi
+        description: "Air quality index."
 
   - name: fact_prescriptions
-    description: "Fact table for prescriptions enriched with patient, disease, and hospital context."
+    description: "Fact table capturing patient prescriptions with quantity, cost, and treatment details."
     columns:
       - name: prescription_id
-        description: "Unique identifier for prescription"
+        description: "Unique identifier for prescription."
         tests: [not_null, unique]
-      - name: patient_id
-        description: "Foreign key to dim_patients"
+      - name: transaction_date_key
+        description: "FK to date dimension."
+      - name: patient_key
+        description: "FK to dim_patients."
         tests:
           - relationships:
               to: ref('dim_patients')
               field: patient_id
-      - name: disease_id
-        description: "Foreign key to dim_diseases"
+      - name: medicine_key
+        description: "FK to dim_drugs."
         tests:
           - relationships:
-              to: ref('dim_diseases')
-              field: disease_id
-      - name: hospital_id
-        description: "Foreign key to dim_hospitals"
+              to: ref('dim_drugs')
+              field: medicine_id
+      - name: hospital_key
+        description: "FK to dim_hospital."
         tests:
           - relationships:
-              to: ref('dim_hospitals')
+              to: ref('dim_hospital')
               field: hospital_id
-
-  - name: fact_disease_trends
-    description: "Aggregated fact table for disease case counts and trends over time."
-    columns:
-      - name: disease_id
-        description: "Foreign key to dim_diseases"
+      - name: disease_key
+        description: "FK to dim_disease."
         tests:
           - relationships:
-              to: ref('dim_diseases')
+              to: ref('dim_disease')
               field: disease_id
-      - name: region_id
-        description: "Foreign key to dim_geography"
-        tests:
-          - relationships:
-              to: ref('dim_geography')
-              field: region_id
-      - name: trend_date
-        description: "Date of aggregation"
-        tests: [not_null]
-      - name: total_cases
-        description: "Aggregated number of cases on trend_date"
-
-  - name: fact_disease_surveillance
-    description: "Fact table for real-time disease surveillance with daily trends and patient outcomes."
-    columns:
-      - name: surveillance_id
-        description: "Unique identifier for surveillance record"
-        tests: [not_null, unique]
-      - name: date
-        description: "Surveillance record date"
-        tests: [not_null]
-      - name: daily_cases
-        description: "Total cases for that date"
-      - name: daily_change_pct
-        description: "Day-over-day percentage change in cases"
-      - name: case_fatality_rate
-        description: "Daily case fatality rate"
-      - name: recovery_rate
-        description: "Daily recovery rate"
-      - name: avg_length_of_stay
-        description: "Average length of hospital stay for patients"
-
-  - name: fact_geographic_hotspots
-    description: "Fact table for geographic hotspot detection with population-adjusted risk scoring."
-    columns:
-      - name: region_id
-        description: "Foreign key to dim_geography"
-        tests:
-          - relationships:
-              to: ref('dim_geography')
-              field: region_id
-      - name: total_cases
-        description: "Total number of cases in region"
-        tests: [not_null]
-      - name: total_patients
-        description: "Distinct patient count in region"
-        tests: [not_null]
-      - name: cases_per_1k_density
-        description: "Cases per 1000 population density"
-      - name: hotspot_risk_level
-        description: "Risk classification: Normal/Warning/Critical"
+      - name: quantity_prescribed
+        description: "Quantity prescribed by doctor."
+      - name: quantity_dispensed
+        description: "Quantity actually dispensed to patient."
+      - name: unit_price
+        description: "Price per unit of medicine."
+      - name: total_amount
+        description: "Total cost of prescription."
+      - name: medicine_utilization_rate
+        description: "Ratio of dispensed to prescribed quantity."
+      - name: cost_per_day_treatment
+        description: "Cost per day of treatment."
+      - name: daily_consumption_rate
+        description: "Daily consumption rate based on duration."
+      - name: prescription_status
+        description: "Status (Active/Completed/Cancelled)."
+      - name: transaction_date
+        description: "Date of transaction."
