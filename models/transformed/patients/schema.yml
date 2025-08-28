@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: dim_patients
+    description: "Dimension table containing patient demographics and registration details."
+    columns:
+      - name: patient_id
+        tests: [not_null, unique]
+      - name: patient_gender
+        tests:
+          - accepted_values:
+              values: ["Male", "Female", "Other"]
+
+  - name: dim_diseases
+    description: "Dimension table containing disease reference data."
+    columns:
+      - name: disease_id
+        tests: [not_null, unique]
+
+  - name: dim_hospitals
+    description: "Dimension table containing hospital reference data."
+    columns:
+      - name: hospital_id
+        tests: [not_null, unique]
+
+  - name: dim_geography
+    description: "Dimension table containing geographic details."
+    columns:
+      - name: region_id
+        tests: [not_null, unique]
+
+  - name: fact_patient_visits
+    description: "Fact table for hospital visits, admissions, discharges, and outcomes."
+    columns:
+      - name: surveillance_id
+        tests: [not_null, unique]
+      - name: patient_id
+        tests:
+          - relationships:
+              to: ref('dim_patients')
+              field: patient_id
+      - name: hospital_id
+        tests:
+          - relationships:
+              to: ref('dim_hospitals')
+              field: hospital_id
+
+  - name: fact_prescriptions
+    description: "Fact table for prescriptions enriched with patient, disease, and hospital context."
+    columns:
+      - name: prescription_id
+        tests: [not_null, unique]
+      - name: patient_id
+        tests:
+          - relationships:
+              to: ref('dim_patients')
+              field: patient_id
+      - name: disease_id
+        tests:
+          - relationships:
+              to: ref('dim_diseases')
+              field: disease_id
+      - name: hospital_id
+        tests:
+          - relationships:
+              to: ref('dim_hospitals')
+              field: hospital_id
+
+  - name: fact_disease_trends
+    description: "Aggregated fact table for disease case counts and trends over time."
+    columns:
+      - name: disease_id
+        tests:
+          - relationships:
+              to: ref('dim_diseases')
+              field: disease_id
+      - name: region_id
+        tests:
+          - relationships:
+              to: ref('dim_geography')
+              field: region_id

@@ -7,9 +7,30 @@ profile: 'Disease_trends_analysis_medicine_inventory_optimization'
 
 models:
   Disease_trends_analysis_medicine_inventory_optimization:
+
+    # STAGING MODELS
     staging:
       +materialized: view
-      +schema: STAGING   # Will go into DBT_DEV.STAGING
-    marts:
-      +materialized: table
-      +schema: MARTS     # Will go into DBT_DEV.MARTS
+      +schema: STAGING       # RAW_DB_DEV.STAGING (from staging sources)
+
+    # TRANSFORMED MODELS
+    transformed:
+      +database: TRANSFORMED_DB_DEV
+
+      # Patients Domain
+      patients:
+        dim:
+          +materialized: table
+          +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
+        facts:
+          +materialized: table
+          +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
+
+      # Inventory Domain
+      inventory:
+        dim:
+          +materialized: table
+          +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
+        fact:
+          +materialized: table
+          +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
