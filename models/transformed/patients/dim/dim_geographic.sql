@@ -28,15 +28,10 @@ select
     pharmacy_count,
 
     -- Derived Metrics
-    population_per_sqkm,
-    geographic_area,
-
-    -- Audit
-    effective_date,
-    expiry_date,
-    case
-        when expiry_date is null or expiry_date >= current_date then true
-        else false
-    end as is_current
+    population_density as population_per_sqkm,
+    case 
+        when population_density = 0 or population_density is null then null
+        else state_population / population_density
+    end as geographic_area
 
 from {{ ref('stg_geographic') }}

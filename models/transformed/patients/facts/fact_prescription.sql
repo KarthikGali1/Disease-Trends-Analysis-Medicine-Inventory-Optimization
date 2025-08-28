@@ -117,4 +117,4 @@ final as (
     from src
 )
 
-select * from final;
+select * from final

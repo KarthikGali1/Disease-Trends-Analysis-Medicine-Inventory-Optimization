@@ -13,7 +13,7 @@ select
     disease_category,
 
     -- Clinical
-    severity_levels,
+    severity_level,
     transmission_type,
 
     -- Patterns
@@ -21,14 +21,6 @@ select
     example_drugs,
 
     -- Thresholds
-    outbreak_threshold,
-
-    -- Audit
-    effective_date,
-    expiry_date,
-    case
-        when expiry_date is null or expiry_date >= current_date then true
-        else false
-    end as is_current
+    -- outbreak_threshold we dont have,
 
 from {{ ref('stg_diseases') }}

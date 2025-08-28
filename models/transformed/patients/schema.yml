@@ -28,10 +28,6 @@ models:
         description: "Government scheme eligibility."
       - name: age_group
         description: "Derived classification: Child / Adult / Senior."
-      - name: registration_date
-        description: "Patient registration date."
-      - name: is_current
-        description: "Flag indicating if the record is active."
 
   - name: dim_hospital
     description: "Hospital dimension with classification, infrastructure, and contact details."
@@ -49,8 +45,6 @@ models:
         description: "Total bed capacity."
       - name: established_year
         description: "Year of establishment."
-      - name: is_current
-        description: "Flag indicating if record is active."
 
   - name: dim_disease
     description: "Disease dimension with classification, patterns, thresholds, and audit details."
@@ -62,14 +56,10 @@ models:
         description: "Disease name."
       - name: disease_category
         description: "Category of disease."
-      - name: severity_levels
-        description: "Severity levels associated with the disease."
+      - name: severity_level
+        description: "Severity level associated with the disease."
       - name: transmission_type
         description: "Mode of transmission."
-      - name: outbreak_threshold
-        description: "Threshold for outbreak identification."
-      - name: is_current
-        description: "Flag indicating if record is active."
 
   - name: dim_geographic
     description: "Geographic dimension containing administrative, coordinates, demographics, and infrastructure."
@@ -87,31 +77,6 @@ models:
         description: "Number of healthcare facilities in the region."
       - name: pharmacy_count
         description: "Number of pharmacies in the region."
-      - name: is_current
-        description: "Flag indicating if record is active."
-
-  - name: dim_drugs
-    description: "Medicine/Drug dimension with manufacturing, storage, dosage, prescription, classification, and audit details."
-    columns:
-      - name: medicine_id
-        description: "Business key for medicine."
-        tests: [not_null, unique]
-      - name: generic_name
-        description: "Generic name of the medicine."
-      - name: therapeutic_class
-        description: "Therapeutic class."
-      - name: manufacturer
-        description: "Drug manufacturer."
-      - name: shelf_life_months
-        description: "Shelf life in months."
-      - name: storage_temperature
-        description: "Storage requirements."
-      - name: prescription_required
-        description: "Whether prescription is mandatory."
-      - name: medicine_category
-        description: "Medicine category classification."
-      - name: is_current
-        description: "Flag indicating if record is active."
 
   # -----------------
   # FACTS

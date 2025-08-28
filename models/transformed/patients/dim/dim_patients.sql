@@ -42,11 +42,6 @@ select
 
     -- Audit
     try_to_date(registration_date) as registration_date,
-    try_to_date(effective_date) as effective_date,
-    try_to_date(expiry_date) as expiry_date,
-    case
-        when expiry_date is null or try_to_date(expiry_date) >= current_date then true
-        else false
-    end as is_current
+    --effective_date,expiry_date,is_current
 
 from {{ ref('stg_patients') }}
