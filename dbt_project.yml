@@ -22,7 +22,7 @@ models:
         dim:
           +materialized: table
           +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
-        facts:
+        fact:
           +materialized: table
           +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
 
@@ -34,3 +34,7 @@ models:
         fact:
           +materialized: table
           +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
+    consumption:
+      +materialized: view
+      +schema: ANALYTICS
+      +database: CONSUMPTION_DB_DEV
