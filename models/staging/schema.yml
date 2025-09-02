@@ -1,0 +1,71 @@
+version: 2
+
+sources:
+  - name: raw
+    database: RAW_DB_DEV
+    schema: SOURCE_S3
+    tables:
+      - name: RAW_PATIENTS
+      - name: RAW_PRESCRIPTIONS
+      - name: RAW_HOSPITALS
+      - name: RAW_SUPPLIERS
+      - name: RAW_INVENTORY
+      - name: RAW_GEOGRAPHIC
+      - name: RAW_DRUGS_WITH_IDS
+      - name: RAW_DISEASES_WITH_IDS
+      - name: RAW_HEALTHCARE_SURVEILLANCE
+
+models:
+  - name: stg_patients
+    description: "Cleaned staging model for patients"
+    columns:
+      - name: patient_id
+        tests: [not_null, unique]
+
+  - name: stg_prescriptions
+    description: "Cleaned staging model for prescriptions"
+    columns:
+      - name: prescription_id
+        tests: [not_null, unique]
+
+  - name: stg_hospitals
+    description: "Cleaned staging model for hospitals"
+    columns:
+      - name: hospital_id
+        tests: [not_null, unique]
+
+  - name: stg_suppliers
+    description: "Cleaned staging model for suppliers"
+    columns:
+      - name: supplier_id
+        tests: [not_null, unique]
+
+  - name: stg_inventory
+    description: "Cleaned staging model for inventory"
+    columns:
+      - name: inventory_id
+        tests: [not_null, unique]
+
+  - name: stg_geographic
+    description: "Cleaned staging model for geographic"
+    columns:
+      - name: region_id
+        tests: [not_null, unique]
+
+  - name: stg_drugs
+    description: "Cleaned staging model for drugs"
+    columns:
+      - name: drug_id
+        tests: [not_null, unique]
+
+  - name: stg_diseases
+    description: "Cleaned staging model for diseases"
+    columns:
+      - name: disease_id
+        tests: [not_null, unique]
+
+  - name: stg_healthcare_surveillance
+    description: "Cleaned staging model for healthcare surveillance"
+    columns:
+      - name: surveillance_id
+        tests: [not_null, unique]

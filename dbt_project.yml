@@ -1,0 +1,28 @@
+name: 'Disease_trends_analysis_medicine_inventory_optimization'
+version: '1.0.0'
+config-version: 2
+
+# Match your profile name in dbt Cloud / profiles.yml
+profile: 'Disease_trends_analysis_medicine_inventory_optimization'
+
+models:
+  Disease_trends_analysis_medicine_inventory_optimization:
+
+    # STAGING MODELS
+    staging:
+      +database: RAW_DB_DEV
+      +materialized: view
+      +schema: STAGING       # RAW_DB_DEV.STAGING (from staging sources)
+
+    # TRANSFORMED MODELS
+    transformed:
+      +database: TRANSFORMED_DB_DEV
+
+      # Patients Domain
+      patients:
+          +materialized: table
+          +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
+    consumption:
+      +materialized: view
+      +schema: ANALYTICS
+      +database: CONSUMPTION_DB_DEV
