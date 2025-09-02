@@ -10,6 +10,7 @@ models:
 
     # STAGING MODELS
     staging:
+      +database: RAW_DB_DEV
       +materialized: view
       +schema: STAGING       # RAW_DB_DEV.STAGING (from staging sources)
 
@@ -19,21 +20,8 @@ models:
 
       # Patients Domain
       patients:
-        dim:
           +materialized: table
           +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
-        fact:
-          +materialized: table
-          +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
-
-      # Inventory Domain
-      inventory:
-        dim:
-          +materialized: table
-          +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
-        fact:
-          +materialized: table
-          +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
     consumption:
       +materialized: view
       +schema: ANALYTICS
