@@ -17,12 +17,59 @@ models:
     # TRANSFORMED MODELS
     transformed:
       +database: TRANSFORMED_DB_DEV
+<<<<<<< HEAD
+=======
 
+>>>>>>> f32683793d8c78617c88e71cc31e1bcdfe2789f5
       # Patients Domain
       patients:
           +materialized: table
           +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
+<<<<<<< HEAD
+      inventory:
+          +materialized: table
+          +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
+      diseases:
+          +materialized: table
+          +schema: DISEASES  # => TRANSFORMED_DB_DEV.DISEASES
+      drugs:
+          +materialized: table
+          +schema: DRUGS  # => TRANSFORMED_DB_DEV.DRUGS
+      geographic:
+          +materialized: table
+          +schema: GEOGRAPHIC  # => TRANSFORMED_DB_DEV.GEOGRAPHIC
+      hospitals:
+          +materialized: table
+          +schema: HOSPITALS  # => TRANSFORMED_DB_DEV.HOSPITALS
+      severity_levels:
+          +materialized: table
+          +schema: SEVERITY_LEVELS  # => TRANSFORMED_DB_DEV.SEVERITY_LEVELS
+      suppliers:
+          +materialized: table
+          +schema: SUPPLIERS  # => TRANSFORMED_DB_DEV.SUPPLIERS
+      disease_cases:
+          +materialized: table
+          +schema: DISEASE_CASES   # => TRANSFORMED_DB_DEV.DISEASE_CASES
+      disease_events:
+          +materialized: table
+          +schema: DISEASE_EVENTS   # => TRANSFORMED_DB_DEV.DISEASE_EVENTS 
+      disease_surveillance:
+          +materialized: table
+          +schema: DISEASE_SURVEILLANCE  # => TRANSFORMED_DB_DEV.DISEASE_SURVEILLANCE
+      prescriptions:
+          +materialized: table
+          +schema: PRESCRIPTIONS  # => TRANSFORMED_DB_DEV.PRESCRIPTIONS
+      agg_financials:
+          +materialized: table
+          +schema: AGG_FINANCIALS  # => TRANSFORMED_DB_DEV.AGG_FINANCIALS   
+   #CONSUMPTION MODELS                         
     consumption:
       +materialized: view
       +schema: ANALYTICS
       +database: CONSUMPTION_DB_DEV
+=======
+    consumption:
+      +materialized: view
+      +schema: ANALYTICS
+      +database: CONSUMPTION_DB_DEV
+>>>>>>> f32683793d8c78617c88e71cc31e1bcdfe2789f5
