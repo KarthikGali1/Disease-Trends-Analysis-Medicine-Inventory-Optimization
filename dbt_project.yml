@@ -17,10 +17,15 @@ models:
     # TRANSFORMED MODELS
     transformed:
       +database: TRANSFORMED_DB_DEV
+<<<<<<< HEAD
+=======
+
+>>>>>>> f32683793d8c78617c88e71cc31e1bcdfe2789f5
       # Patients Domain
       patients:
           +materialized: table
           +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
+<<<<<<< HEAD
       inventory:
           +materialized: table
           +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY
@@ -62,3 +67,9 @@ models:
       +materialized: view
       +schema: ANALYTICS
       +database: CONSUMPTION_DB_DEV
+=======
+    consumption:
+      +materialized: view
+      +schema: ANALYTICS
+      +database: CONSUMPTION_DB_DEV
+>>>>>>> f32683793d8c78617c88e71cc31e1bcdfe2789f5
