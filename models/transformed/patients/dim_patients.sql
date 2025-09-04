@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 SELECT DISTINCT
     rp.patient_id::STRING AS patient_id,
     rp.patient_name::STRING AS patient_name,
@@ -15,8 +14,7 @@ LEFT JOIN
     {{ ref('dim_geographic') }} AS rg ON rp.city = rg.city
                                    AND rp.state = rg.state
                                    AND rp.pincode = rg.pincode
-=======
-SELECT 
+    SELECT 
     MD5(patient_id) AS patient_sk,      -- surrogate key
     patient_id,
     patient_name,
@@ -68,4 +66,3 @@ SELECT
 
 FROM --raw_patients
 {{source('raw','RAW_PATIENTS')}}
->>>>>>> f32683793d8c78617c88e71cc31e1bcdfe2789f5
