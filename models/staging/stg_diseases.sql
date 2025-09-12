@@ -6,4 +6,4 @@ select
     initcap(trim(transmission_type)) as transmission_type,
     initcap(trim(seasonal_pattern)) as seasonal_pattern,
     initcap(trim(example_drugs)) as example_drugs
-from {{ source('raw', 'RAW_DISEASES_WITH_IDS') }}
+from {{ source('raw', 'RAW_DISEASES_WITH_IDS') }} 

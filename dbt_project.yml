@@ -20,7 +20,7 @@ models:
       # Patients Domain
       patients:
           +materialized: table
-          +schema: PATIENTS   # => TRANSFORMED_DB_DEV.PATIENTS
+          +schema: PATIENT   # => TRANSFORMED_DB_DEV.PATIENT
       inventory:
           +materialized: table
           +schema: INVENTORY  # => TRANSFORMED_DB_DEV.INVENTORY

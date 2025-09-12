@@ -6,10 +6,10 @@ SELECT
     TRY_TO_DATE(rhs.admit_date) AS admit_date,
     TRY_TO_DATE(rhs.discharge_date) AS discharge_date,
     TRY_TO_NUMBER(rhs.length_of_stay_days) AS length_of_stay_days,
-    TRY_TO_NUMBER(rhs.body_temperature, 5, 2) AS body_temperature,
+    TRY_TO_NUMBER(rhs.body_temperature::STRING, 5, 2) AS body_temperature,
     rhs.outcome::STRING AS outcome,
     MD5(TRIM(UPPER(rhs.severity_level)))::STRING AS severity_code,
-    -- Calculated analytics columns with explicit casting and aliase
+    -- Calculated analytics columns with explicit casting and alias
     (CASE
         WHEN rhs.discharge_date IS NULL THEN TRUE
         ELSE FALSE
