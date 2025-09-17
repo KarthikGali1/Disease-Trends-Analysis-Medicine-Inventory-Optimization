@@ -7,6 +7,7 @@ with daily_consumption as (
     from {{ ref('fact_prescriptions') }}
     where transaction_date >= current_date - 90
     group by drug_id, hospital_id
+
 ),
 
 prescription_kpis as (
