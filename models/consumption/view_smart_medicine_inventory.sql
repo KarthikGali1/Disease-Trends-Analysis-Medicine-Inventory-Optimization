@@ -10,7 +10,7 @@ with daily_consumption as (
 ),
 
 prescription_kpis as (
-    -- Aggregate prescription-based KPIs at the drug and hospital level
+    --   Aggregate prescription-based KPIs at the drug and hospital level
     select
         drug_id,
         hospital_id,
