@@ -1,0 +1,301 @@
+models:
+  # Dimension Tables
+  - name: dim_diseases
+    description: "Dimension table containing disease master data with categorization and severity information"
+    columns:
+      - name: disease_id
+        description: "Unique identifier for each disease"
+        tests:
+          - unique
+          - not_null
+      - name: disease_name
+        description: "Name of the disease"
+        tests:
+          - not_null
+      - name: disease_category
+        description: "Category classification of the disease"
+        tests:
+          - not_null
+      - name: severity_code
+        description: "MD5 hash of normalized severity level"
+        tests:
+          - not_null
+  - name: dim_drugs
+    description: "Dimension table containing drug/medication master data"
+    columns:
+      - name: drug_id
+        description: "Unique identifier for each drug"
+        tests:
+          - unique
+          - not_null
+      - name: generic_name
+        description: "Generic name of the drug"
+        tests:
+          - not_null
+      - name: therapeutic_class
+        description: "Therapeutic classification of the drug"
+        tests:
+          - not_null
+      - name: manufacturer
+        description: "Manufacturing company name"
+        tests:
+          - not_null
+      - name: shelf_life_months
+        description: "Shelf life in months"
+        tests:
+          - not_null
+  - name: dim_geographic
+    description: "Dimension table containing geographic/location master data"
+    columns:
+      - name: region_id
+        description: "Unique identifier for each geographic region"
+        tests:
+          - unique
+          - not_null
+      - name: state
+        description: "State name"
+        tests:
+          - not_null
+      - name: city
+        description: "City name"
+        tests:
+          - not_null
+      - name: district
+        description: "District name"
+        tests:
+          - not_null
+      - name: pincode
+        description: "Postal code"
+        tests:
+          - not_null
+  - name: dim_hospitals
+    description: "Dimension table containing hospital master data"
+    columns:
+      - name: hospital_id
+        description: "Unique identifier for each hospital"
+        tests:
+          - unique
+          - not_null
+      - name: hospital_name
+        description: "Name of the hospital"
+        tests:
+          - not_null
+      - name: city_id
+        description: "Reference to geographic dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_geographic')
+              field: region_id
+  - name: dim_patients
+    description: "Dimension table containing patient master data"
+    columns:
+      - name: patient_id
+        description: "Unique identifier for each patient"
+        tests:
+          - unique
+          - not_null
+      - name: patient_name
+        description: "Patient name"
+        tests:
+          - not_null
+ 
+      - name: city_id
+        description: "Reference to geographic dimension"
+        tests:
+          - relationships:
+              to: ref('dim_geographic')
+              field: region_id
+      - name: registration_date
+        description: "Patient registration date"
+        tests:
+          - not_null
+
+  - name: dim_severity
+    description: "Dimension table for disease severity levels"
+    columns:
+      - name: severity_code
+        description: "MD5 hash of severity level (primary key)"
+        tests:
+          - unique
+          - not_null
+      - name: severity_raw
+        description: "Raw severity level text"
+        tests:
+          - not_null
+  - name: dim_suppliers
+    description: "Dimension table containing supplier master data"
+    columns:
+      - name: supplier_id
+        description: "Unique identifier for each supplier"
+        tests:
+          - unique
+          - not_null
+      - name: supplier_name
+        description: "Name of the supplier"
+        tests:
+          - not_null
+      - name: city_id
+        description: "Reference to geographic dimension"
+        tests:
+          - relationships:
+              to: ref('dim_geographic')
+              field: region_id
+  # Fact Tables
+  - name: fact_inventory
+    description: "Fact table containing inventory data with calculated metrics"
+    columns:
+      - name: inventory_id
+        description: "Unique identifier for inventory record"
+        tests:
+          - unique
+          - not_null
+      - name: drug_id
+        description: "Reference to drug dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_drugs')
+              field: drug_id
+      - name: hospital_id
+        description: "Reference to hospital dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hospitals')
+              field: hospital_id
+      - name: supplier_id
+        description: "Reference to supplier dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_suppliers')
+              field: supplier_id
+      - name: batch_number
+        description: "Batch number of the inventory item"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Date when order was placed"
+        tests:
+          - not_null
+      - name: expiry_date
+        description: "Expiry date of the batch"
+        tests:
+          - not_null
+      - name: is_stockout
+        description: "Boolean flag for stockout"
+        tests:
+          - not_null
+      - name: is_below_reorder
+        description: "Boolean flag for below reorder level"
+        tests:
+          - not_null
+      - name: is_expired
+        description: "Boolean flag for expired items"
+        tests:
+          - not_null
+  - name: fact_prescriptions
+    description: "Fact table containing prescription transaction data"
+    columns:
+      - name: prescription_id
+        description: "Unique identifier for prescription"
+        tests:
+          - unique
+          - not_null
+      - name: patient_id
+        description: "Reference to patient dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patients')
+              field: patient_id
+      - name: hospital_id
+        description: "Reference to hospital dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hospitals')
+              field: hospital_id
+      - name: disease_id
+        description: "Reference to disease dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_diseases')
+              field: disease_id
+      - name: drug_id
+        description: "Reference to drug dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_drugs')
+              field: drug_id
+      - name: transaction_date
+        description: "Date of prescription transaction"
+        tests:
+          - not_null
+      - name: doctor_id
+        description: "Doctor identifier"
+        tests:
+          - not_null
+  - name: fact_healthcare_surveillance
+    description: "Fact table for healthcare surveillance cases"
+    columns:
+      - name: case_id
+        description: "Unique surveillance case identifier"
+        tests:
+          - unique
+          - not_null
+      - name: patient_id
+        description: "Reference to patient dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_patients')
+              field: patient_id
+      - name: hospital_id
+        description: "Reference to hospital dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_hospitals')
+              field: hospital_id
+      - name: disease_id
+        description: "Reference to disease dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_diseases')
+              field: disease_id
+      - name: admit_date
+        description: "Patient admission date"
+        tests:
+          - not_null
+      - name: severity_code
+        description: "Reference to severity dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_severity')
+              field: severity_code
+      - name: is_active_case
+        description: "Boolean flag for active cases"
+        tests:
+          - not_null
+      - name: admission_year
+        description: "Year of admission"
+        tests:
+          - not_null
+  # Analytics/Mart Tables
+  - name: mart_inventory_performance
+    description: "Analytics table for inventory performance metrics"
+    columns:
+      - name: hospital_id
+        description: "Hospital identifier"
+        tests:
+          - not_null
+      - name: drug_id
+        description: "Drug identifier"
+        tests:
+          - not_null
