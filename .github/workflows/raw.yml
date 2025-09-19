@@ -1,54 +1,45 @@
-name: Deploy Raw Layer
+name: snowflake-devops-demo
+# Controls when the action will run. 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - 'raw/**'
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+    paths:
+      - 'raw/**'
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
 jobs:
-  deploy-raw:
+  deploy-snowflake-changes-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Use Python 3.8.x
+        uses: actions/setup-python@v2.2.1
         with:
-          python-version: '3.9'
-      - name: Install schemachange
-        run: pip install schemachange
-      
-      - name: Create connections.toml with proper escaping
-        run: |
-          cat > connections.toml << EOF
-          [connections.raw_connection]
-          account = "${SNOWFLAKE_ACCOUNT}"
-          user = "${SNOWFLAKE_USER}"
-          password = "${SNOWFLAKE_PASSWORD}"
-          role = "${SNOWFLAKE_ROLE}"
-          warehouse = "${SNOWFLAKE_WH}"
-          database = "RAW_DB_DEV"
-          schema = "SCHEMACHANGE"
-          EOF
+          python-version: 3.8.x
           
-          # Verify the file was created correctly (without exposing secrets)
-          echo "connections.toml structure:"
-          grep -v password connections.toml
-          echo "password = [REDACTED]"
+      - name: Run schemachange
         env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SF_USERNAME: ${{ secrets.SNOWFLAKE_USER }}
+          SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WH }}
+          SF_DATABASE: RAW_DB_DEV
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WH: ${{ secrets.SNOWFLAKE_WH }}
-      
-      - name: Debug - Show actual file content
         run: |
-          echo "Actual connections.toml content (with sensitive data masked):"
-          sed 's/= ".*"/= "[REDACTED]"/' connections.toml
-      
-      - name: Deploy Raw Layer
-        run: |
-          schemachange deploy \
-            -c raw_connection \
-            -f raw/ \
-            --create-change-history-table
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          python --version
+          echo "Step 1: Installing schemachange"
+          pip install schemachange
+          
+          echo "Step 2: Running schemachange"
+          schemachange -f $GITHUB_WORKSPACE/raw -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
