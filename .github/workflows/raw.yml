@@ -37,6 +37,7 @@ jobs:
           test -n "$SNOWFLAKE_ROLE" && echo "SNOWFLAKE_ROLE is set" || echo "SNOWFLAKE_ROLE is NOT set"
           test -n "$SNOWFLAKE_WAREHOUSE" && echo "SNOWFLAKE_WAREHOUSE is set" || echo "SNOWFLAKE_WAREHOUSE is NOT set"
           test -n "$SNOWFLAKE_DATABASE" && echo "SNOWFLAKE_DATABASE is set" || echo "SNOWFLAKE_DATABASE is NOT set"
+          test -n "$SNOWFLAKE_SCHEMA" && echo "SNOWFLAKE_SCHEMA is set" || echo "SNOWFLAKE_SCHEMA is NOT set"
         env:
           SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
@@ -44,6 +45,7 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SF_SCHEMA }}
 
       - name: Deploy Database Changes to Snowflake
         env:
@@ -53,6 +55,7 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SF_SCHEMA }}
         run: |
           echo "Running schemachange..."
           schemachange deploy \
@@ -62,6 +65,7 @@ jobs:
             -r $SNOWFLAKE_ROLE \
             -w $SNOWFLAKE_WAREHOUSE \
             -d $SNOWFLAKE_DATABASE \
+            -d $SNOWFLAKE_SCHEMA \
             -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
             --create-change-history-table \
             --verbose
