@@ -1,3 +1,4 @@
+use schema staging;
 create or replace file format csv_ff
   type = 'CSV'
   field_delimiter = ','
