@@ -1,3 +1,4 @@
+use schema staging;
 CREATE OR REPLACE TASK task_load_drugs
   WAREHOUSE = 'LOAD_WH'
   SCHEDULE = 'USING CRON 5 2 * * * UTC'  -- 5 minutes after patients
