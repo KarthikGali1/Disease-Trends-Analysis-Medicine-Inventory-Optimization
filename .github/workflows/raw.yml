@@ -44,49 +44,6 @@ jobs:
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
           SNOWFLAKE_SCHEMA: ${{ secrets.SF_SCHEMA }}
-
-      - name: Create connections.toml
-        run: |
-          cat > connections.toml << EOF
-          [default]
-          account = "${{ secrets.SF_ACCOUNT }}"
-          user = "${{ secrets.SF_USERNAME }}"
-          password = "${{ secrets.SF_PASSWORD }}"
-          role = "${{ secrets.SF_ROLE }}"
-          warehouse = "${{ secrets.SF_WAREHOUSE }}"
-          database = "${{ secrets.SF_DATABASE }}"
-          schema = "${{ secrets.SF_SCHEMA }}"
-          EOF
-          
-      - name: Test Snowflake Connection
-        env:
-          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
-          SNOWFLAKE_SCHEMA: ${{ secrets.SF_SCHEMA }}
-        run: |
-          echo "Testing Snowflake connection..."
-          python3 -c "
-          import snowflake.connector
-          try:
-              conn = snowflake.connector.connect(
-                  account='${{ secrets.SF_ACCOUNT }}',
-                  user='${{ secrets.SF_USERNAME }}',
-                  password='${{ secrets.SF_PASSWORD }}',
-                  role='${{ secrets.SF_ROLE }}',
-                  warehouse='${{ secrets.SF_WAREHOUSE }}',
-                  database='${{ secrets.SF_DATABASE }}',
-                  schema='${{ secrets.SF_SCHEMA }}'
-              )
-              print('✓ Connection successful')
-              conn.close()
-          except Exception as e:
-              print(f'✗ Connection failed: {e}')
-              exit(1)
-          " || echo "Connection test failed - please verify your Snowflake credentials and object permissions"
           
       - name: Deploy Database Changes to Snowflake
         env:
@@ -101,6 +58,12 @@ jobs:
           echo "Running schemachange..."
           schemachange deploy \
             -f raw/ \
-            -c ${{ secrets.SF_DATABASE }}.SCHEMACHANGE.CHANGE_HISTORY \
+            -a $SNOWFLAKE_ACCOUNT \
+            -u $SNOWFLAKE_USER \
+            -r $SNOWFLAKE_ROLE \
+            -w $SNOWFLAKE_WAREHOUSE \
+            -d $SNOWFLAKE_DATABASE \
+            -s $SNOWFLAKE_SCHEMA \
+            -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
             --create-change-history-table \
             --verbose
