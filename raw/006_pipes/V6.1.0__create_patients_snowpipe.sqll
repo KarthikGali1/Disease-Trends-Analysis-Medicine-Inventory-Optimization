@@ -1,0 +1,39 @@
+-- File: raw/V6.1.0__create_patients_snowpipe.sql
+-- Description: Create Snowpipe for automatic loading of patients data
+-- Author: Data Engineering Team
+-- Date: 2025-01-XX
+
+USE SCHEMA staging;
+
+-- Create Snowpipe for patients data
+CREATE OR REPLACE PIPE pipe_load_patients
+  AUTO_INGEST = TRUE
+  AWS_SNS_TOPIC = 'arn:aws:sns:us-east-1:YOUR_ACCOUNT:disease_inv_notifications'  -- Replace with your SNS topic
+AS
+  COPY INTO raw_patients
+  FROM @disease_inv_stage/patients/
+  FILE_FORMAT = (FORMAT_NAME = csv_ff)
+  PATTERN = '.*patients.*\.csv'
+  ON_ERROR = 'continue';
+
+-- Show pipe status for monitoring
+-- SELECT SYSTEM$PIPE_STATUS('pipe_load_patients');
+
+-- Create stored procedure for manual logging (optional)
+CREATE OR REPLACE PROCEDURE log_patients_load_sp()
+RETURNS STRING
+LANGUAGE SQL
+AS
+$$
+BEGIN
+  INSERT INTO load_audit_log
+  SELECT
+    'raw_patients' as table_name,
+    COUNT(*) as record_count,
+    CURRENT_TIMESTAMP() as load_timestamp
+  FROM raw_patients
+  WHERE _metadata$file_last_modified > DATEADD(hour, -1, CURRENT_TIMESTAMP());
+  
+  RETURN 'Patients load logged successfully.';
+END;
+$$;
