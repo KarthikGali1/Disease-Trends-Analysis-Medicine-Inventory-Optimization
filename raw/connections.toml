@@ -1,0 +1,8 @@
+[raw_connection]
+account = "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+user = "${{ secrets.SNOWFLAKE_USER }}"
+password = "${{ secrets.SNOWFLAKE_PASSWORD }}"
+role = "${{ secrets.SNOWFLAKE_ROLE }}"
+warehouse = "${{ secrets.SNOWFLAKE_WH }}"
+database = "RAW_DB_DEV"
+schema = "SCHEMACHANGE"
