@@ -1,3 +1,4 @@
+use schema staging;
 CREATE OR REPLACE TASK task_load_healthcare_surveillance
   WAREHOUSE = 'LOAD_WH'
   SCHEDULE = 'USING CRON 25 2 * * * UTC'
