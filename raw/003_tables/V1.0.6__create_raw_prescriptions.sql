@@ -1,1 +1,25 @@
-
+create or replace table raw_prescriptions (
+    prescription_id string,
+    transaction_id string,
+    patient_id string,
+    medicine_id string,
+    hospital_id string,
+    disease_id string,
+    patient_name string,
+    medicine_name string,
+    hospital_name string,
+    disease_name string,
+    transaction_date string,         
+    transaction_time string,          
+    quantity_prescribed string,      
+    quantity_dispensed string,
+    treatment_duration_days string,
+    daily_dose_frequency string,
+    dosage_instructions string,
+    unit_price string,
+    total_amount string,
+    payment_method string,
+    prescription_status string,
+    pharmacist_id string,
+    doctor_id string
+);
