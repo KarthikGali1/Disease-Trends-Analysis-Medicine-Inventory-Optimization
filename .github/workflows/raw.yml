@@ -17,66 +17,21 @@ jobs:
       - name: Install schemachange
         run: pip install schemachange
       
-      - name: Debug - Check if secrets are available
+      - name: Create connections.toml with environment variable references
         run: |
-          echo "Checking if secrets are set (showing only length):"
-          echo "SNOWFLAKE_ACCOUNT length: ${#SNOWFLAKE_ACCOUNT}"
-          echo "SNOWFLAKE_USER length: ${#SNOWFLAKE_USER}"
-          echo "SNOWFLAKE_PASSWORD length: ${#SNOWFLAKE_PASSWORD}"
-          echo "SNOWFLAKE_ROLE length: ${#SNOWFLAKE_ROLE}"
-          echo "SNOWFLAKE_WH length: ${#SNOWFLAKE_WH}"
-        env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WH: ${{ secrets.SNOWFLAKE_WH }}
-      
-      - name: Create connections.toml with validation
-        run: |
-          # Validate that all required secrets are set
-          if [ -z "$SNOWFLAKE_ACCOUNT" ]; then
-            echo "ERROR: SNOWFLAKE_ACCOUNT secret is not set"
-            exit 1
-          fi
-          if [ -z "$SNOWFLAKE_USER" ]; then
-            echo "ERROR: SNOWFLAKE_USER secret is not set"
-            exit 1
-          fi
-          if [ -z "$SNOWFLAKE_PASSWORD" ]; then
-            echo "ERROR: SNOWFLAKE_PASSWORD secret is not set"
-            exit 1
-          fi
-          if [ -z "$SNOWFLAKE_ROLE" ]; then
-            echo "ERROR: SNOWFLAKE_ROLE secret is not set"
-            exit 1
-          fi
-          if [ -z "$SNOWFLAKE_WH" ]; then
-            echo "ERROR: SNOWFLAKE_WH secret is not set"
-            exit 1
-          fi
-          
-          # Create connections.toml
-          cat > connections.toml << EOF
+          cat > connections.toml << 'EOF'
           [connections.raw_connection]
-          account = "${SNOWFLAKE_ACCOUNT}"
-          user = "${SNOWFLAKE_USER}"
-          password = "${SNOWFLAKE_PASSWORD}"
-          role = "${SNOWFLAKE_ROLE}"
-          warehouse = "${SNOWFLAKE_WH}"
+          account = { env = "SNOWFLAKE_ACCOUNT" }
+          user = { env = "SNOWFLAKE_USER" }
+          password = { env = "SNOWFLAKE_PASSWORD" }
+          role = { env = "SNOWFLAKE_ROLE" }
+          warehouse = { env = "SNOWFLAKE_WAREHOUSE" }
           database = "RAW_DB_DEV"
           schema = "SCHEMACHANGE"
           EOF
           
-          echo "connections.toml created successfully"
-          echo "File contents (with password masked):"
-          sed 's/password = .*/password = "***"/' connections.toml
-        env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WH: ${{ secrets.SNOWFLAKE_WH }}
+          echo "connections.toml created with environment variable references:"
+          cat connections.toml
       
       - name: Deploy Raw Layer
         run: |
@@ -85,8 +40,8 @@ jobs:
             -f raw/ \
             --create-change-history-table
         env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WH: ${{ secrets.SNOWFLAKE_WH }}
+          SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SF_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SF_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WH }}
