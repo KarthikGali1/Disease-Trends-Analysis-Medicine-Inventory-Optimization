@@ -1,3 +1,4 @@
+use schema staging;
 CREATE OR REPLACE TASK task_load_inventory
   WAREHOUSE = 'LOAD_WH'
   SCHEDULE = 'USING CRON 35 2 * * * UTC'
