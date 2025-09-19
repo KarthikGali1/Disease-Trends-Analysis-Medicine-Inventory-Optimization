@@ -1,8 +1,8 @@
-[connections.raw_connection]
-account = "${{ secrets.SNOWFLAKE_ACCOUNT }}"
-user = "${{ secrets.SNOWFLAKE_USER }}"
-password = "${{ secrets.SNOWFLAKE_PASSWORD }}"
-role = "${{ secrets.SNOWFLAKE_ROLE }}"
-warehouse = "${{ secrets.SNOWFLAKE_WH }}"
+[raw_connection]
+account = "${SNOWFLAKE_ACCOUNT}"
+user = "${SNOWFLAKE_USER}"
+password = "${SNOWFLAKE_PASSWORD}"
+role = "${SNOWFLAKE_ROLE}"
+warehouse = "${SNOWFLAKE_WH}"
 database = "RAW_DB_DEV"
 schema = "SCHEMACHANGE"
