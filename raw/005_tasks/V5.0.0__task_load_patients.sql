@@ -1,3 +1,4 @@
+use schema staging;
 CREATE OR REPLACE TASK task_load_patients
   WAREHOUSE = 'LOAD_WH'  -- Replace with your warehouse
   SCHEDULE = 'USING CRON 0 2 * * * UTC'  -- Daily at 2 AM UTC
