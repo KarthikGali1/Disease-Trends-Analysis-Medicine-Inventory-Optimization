@@ -4,6 +4,6 @@ CREATE OR REPLACE PIPE raw_drugs_pipe
 AUTO_INGEST = TRUE
 AS
 COPY INTO RAW_DB_DEV.STAGING.RAW_DRUGS_WITH_IDS
-FROM @disease_inv_stage
+FROM @disease_inv_stage/drug_with_ids.csv
 FILE_FORMAT = (FORMAT_NAME = csv_ff)
 ON_ERROR = 'CONTINUE';
