@@ -17,21 +17,34 @@ jobs:
       - name: Install schemachange
         run: pip install schemachange
       
-      - name: Create connections.toml with environment variable references
+      - name: Create connections.toml with proper escaping
         run: |
-          cat > connections.toml << 'EOF'
+          cat > connections.toml << EOF
           [connections.raw_connection]
-          account = { env = "SNOWFLAKE_ACCOUNT" }
-          user = { env = "SNOWFLAKE_USER" }
-          password = { env = "SNOWFLAKE_PASSWORD" }
-          role = { env = "SNOWFLAKE_ROLE" }
-          warehouse = { env = "SNOWFLAKE_WAREHOUSE" }
+          account = "${SNOWFLAKE_ACCOUNT}"
+          user = "${SNOWFLAKE_USER}"
+          password = "${SNOWFLAKE_PASSWORD}"
+          role = "${SNOWFLAKE_ROLE}"
+          warehouse = "${SNOWFLAKE_WH}"
           database = "RAW_DB_DEV"
           schema = "SCHEMACHANGE"
           EOF
           
-          echo "connections.toml created with environment variable references:"
-          cat connections.toml
+          # Verify the file was created correctly (without exposing secrets)
+          echo "connections.toml structure:"
+          grep -v password connections.toml
+          echo "password = [REDACTED]"
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WH: ${{ secrets.SNOWFLAKE_WH }}
+      
+      - name: Debug - Show actual file content
+        run: |
+          echo "Actual connections.toml content (with sensitive data masked):"
+          sed 's/= ".*"/= "[REDACTED]"/' connections.toml
       
       - name: Deploy Raw Layer
         run: |
@@ -39,9 +52,3 @@ jobs:
             -c raw_connection \
             -f raw/ \
             --create-change-history-table
-        env:
-          SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SF_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SF_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WH }}
