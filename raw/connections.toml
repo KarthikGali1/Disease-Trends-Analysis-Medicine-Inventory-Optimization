@@ -1,8 +1,8 @@
-[raw_connection]
-account = "${SNOWFLAKE_ACCOUNT}"
-user = "${SNOWFLAKE_USER}"
-password = "${SNOWFLAKE_PASSWORD}"
-role = "${SNOWFLAKE_ROLE}"
-warehouse = "${SNOWFLAKE_WH}"
+[connections.raw_connection]
+account = { env = "SNOWFLAKE_ACCOUNT" }
+user = { env = "SNOWFLAKE_USER" }
+password = { env = "SNOWFLAKE_PASSWORD" }
+role = { env = "SNOWFLAKE_ROLE" }
+warehouse = { env = "SNOWFLAKE_WH" }
 database = "RAW_DB_DEV"
 schema = "SCHEMACHANGE"
