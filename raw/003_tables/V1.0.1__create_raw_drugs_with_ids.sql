@@ -1,4 +1,3 @@
-
 create or replace table raw_drugs_with_ids (
     drug_id string,
     generic_name string,
