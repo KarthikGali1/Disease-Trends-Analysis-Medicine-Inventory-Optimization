@@ -4,6 +4,6 @@ CREATE OR REPLACE PIPE raw_inventory_pipe
 AUTO_INGEST = TRUE
 AS
 COPY INTO RAW_DB_DEV.STAGING.RAW_INVENTORY
-FROM @disease_inv_stage
+FROM @disease_inv_stage/inventory.csv
 FILE_FORMAT = (FORMAT_NAME = csv_ff_inv)
 ON_ERROR = 'CONTINUE';
