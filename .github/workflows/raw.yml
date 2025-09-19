@@ -26,5 +26,13 @@ jobs:
           schemachange \
             -c raw_connection \
             -f raw/ \
+            -a connections.toml \
             --create-change-history-table
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WH: ${{ secrets.SNOWFLAKE_WH }}
+
 
