@@ -31,12 +31,12 @@ jobs:
 
       - name: Deploy Database Changes to Snowflake
         env:
-          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
+          SNOWFLAKE_USER: ${{secrets.SF_USERNAME}}
+          SNOWFLAKE_PASSWORD: ${{secrets.SF_PASSWORD}}
+          SNOWFLAKE_ACCOUNT: ${{secrets.SF_ACCOUNT}}
+          SNOWFLAKE_ROLE: ${{secrets.SF_ROLE}}
+          SNOWFLAKE_WAREHOUSE: ${{secrets.SF_WAREHOUSE}}
+          SNOWFLAKE_DATABASE: ${{secrets.SF_DATABASE}}
         run: |
           echo "Running schemachange..."
           schemachange deploy \
