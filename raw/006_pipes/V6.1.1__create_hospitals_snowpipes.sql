@@ -4,6 +4,6 @@ CREATE OR REPLACE PIPE raw_hospital_pipe
 AUTO_INGEST = TRUE
 AS
 COPY INTO RAW_DB_DEV.STAGING.RAW_HOSPITALS
-FROM @disease_inv_stage/hospitals.csv
+FROM @disease_inv_stage/hospitals_data.csv
 FILE_FORMAT = (FORMAT_NAME = csv_ff)
 ON_ERROR = 'CONTINUE';
