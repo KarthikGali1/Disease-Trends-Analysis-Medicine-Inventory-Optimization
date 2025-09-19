@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "Running schemachange..."
           schemachange deploy \
-            -f dbscripts/ \
+            -f raw/ \
             -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
             --create-change-history-table \
             --verbose
