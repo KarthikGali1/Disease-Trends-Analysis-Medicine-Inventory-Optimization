@@ -4,6 +4,6 @@ CREATE OR REPLACE PIPE raw_geographic_pipe
 AUTO_INGEST = TRUE
 AS
 COPY INTO RAW_DB_DEV.STAGING.RAW_GEOGRAPHIC
-FROM @disease_inv_stage
+FROM @disease_inv_stage/geographic_data.csv
 FILE_FORMAT = (FORMAT_NAME = csv_ff)
 ON_ERROR = 'CONTINUE';
