@@ -1,3 +1,4 @@
+use schema staging;
 CREATE OR REPLACE TASK task_load_geographic
   WAREHOUSE = 'LOAD_WH'
   SCHEDULE = 'USING CRON 40 2 * * * UTC'
