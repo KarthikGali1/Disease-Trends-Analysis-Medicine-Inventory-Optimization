@@ -1,4 +1,4 @@
-USE SCHEMA STAGING;
+use schema staging;
 CREATE OR REPLACE FILE FORMAT csv_ff_fixed
   TYPE = 'CSV'
   FIELD_DELIMITER = ','
