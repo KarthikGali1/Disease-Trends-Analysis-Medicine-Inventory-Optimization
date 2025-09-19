@@ -16,15 +16,21 @@ jobs:
           python-version: '3.9'
       - name: Install schemachange
         run: pip install schemachange
+      - name: Create connections.toml
+        run: |
+          cat > connections.toml << EOF
+          [connections.raw_connection]
+          account = "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+          user = "${{ secrets.SNOWFLAKE_USER }}"
+          password = "${{ secrets.SNOWFLAKE_PASSWORD }}"
+          role = "${{ secrets.SNOWFLAKE_ROLE }}"
+          warehouse = "${{ secrets.SNOWFLAKE_WH }}"
+          database = "RAW_DB_DEV"
+          schema = "SCHEMACHANGE"
+          EOF
       - name: Deploy Raw Layer
         run: |
-          schemachange \
-            --snowflake-account "${{ secrets.SNOWFLAKE_ACCOUNT }}" \
-            --snowflake-user "${{ secrets.SNOWFLAKE_USER }}" \
-            --snowflake-password "${{ secrets.SNOWFLAKE_PASSWORD }}" \
-            --snowflake-role "${{ secrets.SNOWFLAKE_ROLE }}" \
-            --snowflake-warehouse "${{ secrets.SNOWFLAKE_WH }}" \
-            --snowflake-database "RAW_DB_DEV" \
-            --snowflake-schema "SCHEMACHANGE" \
+          schemachange deploy \
+            -c raw_connection \
             -f raw/ \
             --create-change-history-table
