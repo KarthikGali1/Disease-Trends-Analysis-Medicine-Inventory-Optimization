@@ -29,13 +29,13 @@ jobs:
       - name: Install schemachange
         run: pip install schemachange
 
-      - name: Debug Snowflake Vars
+      - name: Debug if Snowflake secrets are set
         run: |
-          echo "SNOWFLAKE_USER=$SNOWFLAKE_USER"
-          echo "SNOWFLAKE_ACCOUNT=$SNOWFLAKE_ACCOUNT"
-          echo "SNOWFLAKE_ROLE=$SNOWFLAKE_ROLE"
-          echo "SNOWFLAKE_WAREHOUSE=$SNOWFLAKE_WAREHOUSE"
-          echo "SNOWFLAKE_DATABASE=$SNOWFLAKE_DATABASE"
+          test -n "$SNOWFLAKE_USER" && echo "SNOWFLAKE_USER is set" || echo "SNOWFLAKE_USER is NOT set"
+          test -n "$SNOWFLAKE_ACCOUNT" && echo "SNOWFLAKE_ACCOUNT is set" || echo "SNOWFLAKE_ACCOUNT is NOT set"
+          test -n "$SNOWFLAKE_ROLE" && echo "SNOWFLAKE_ROLE is set" || echo "SNOWFLAKE_ROLE is NOT set"
+          test -n "$SNOWFLAKE_WAREHOUSE" && echo "SNOWFLAKE_WAREHOUSE is set" || echo "SNOWFLAKE_WAREHOUSE is NOT set"
+          test -n "$SNOWFLAKE_DATABASE" && echo "SNOWFLAKE_DATABASE is set" || echo "SNOWFLAKE_DATABASE is NOT set"
         env:
           SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
           SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
@@ -44,13 +44,6 @@ jobs:
           SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
 
       - name: Deploy Database Changes to Snowflake
-        env:
-          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
         run: |
           echo "Running schemachange..."
           schemachange deploy \
@@ -58,3 +51,10 @@ jobs:
             -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY \
             --create-change-history-table \
             --verbose
+        env:
+          SNOWFLAKE_USER: ${{ secrets.SF_USERNAME }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
