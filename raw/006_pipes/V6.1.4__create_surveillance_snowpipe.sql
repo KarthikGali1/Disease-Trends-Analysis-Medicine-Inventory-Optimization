@@ -4,6 +4,6 @@ CREATE OR REPLACE PIPE raw_surv_pipe
 AUTO_INGEST = TRUE
 AS
 COPY INTO RAW_DB_DEV.STAGING.RAW_HEALTHCARE_SURVEILLANCE
-FROM @disease_inv_stage
+FROM @disease_inv_stage/healthcare_surveillance.csv
 FILE_FORMAT = (FORMAT_NAME = csv_ff_fixed)
 ON_ERROR = 'CONTINUE';
