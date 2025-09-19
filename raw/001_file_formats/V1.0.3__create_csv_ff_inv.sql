@@ -1,3 +1,4 @@
+USE SCHEMA STAGING;
 create or replace file format csv_ff_inv
   type = 'CSV'
   field_delimiter = ','
