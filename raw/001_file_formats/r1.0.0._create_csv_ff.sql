@@ -9,4 +9,4 @@ create or replace file format csv_ff
   date_format = 'MM/DD/YYYY'     
   timestamp_format = 'YYYY-MM-DD HH24:MI:SS'
   encoding = 'UTF8'
-  error_on_column_count_mismatch = false;  ;
+  error_on_column_count_mismatch = false;  
