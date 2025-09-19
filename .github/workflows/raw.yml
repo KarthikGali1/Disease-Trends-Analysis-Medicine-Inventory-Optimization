@@ -4,12 +4,12 @@ name: Deploy Snowflake Changes
 on:
   push:
     branches:
-      - main
+      - KIPI-stone
     paths:
       - 'raw/**'
   pull_request:
     branches:
-      - main
+      - KIPI-stone
     paths:
       - 'raw/**'
   workflow_dispatch:
