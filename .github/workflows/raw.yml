@@ -32,6 +32,8 @@ jobs:
       - name: Debug if Snowflake secrets are set
         run: |
           test -n "$SNOWFLAKE_USER" && echo "SNOWFLAKE_USER is set" || echo "SNOWFLAKE_USER is NOT set"
+          test -n "$SNOWFLAKE_PASSWORD" && echo "SNOWFLAKE_PASSWORD is set" || echo "SNOWFLAKE_PASSWORD is NOT set"
+
           test -n "$SNOWFLAKE_ACCOUNT" && echo "SNOWFLAKE_ACCOUNT is set" || echo "SNOWFLAKE_ACCOUNT is NOT set"
           test -n "$SNOWFLAKE_ROLE" && echo "SNOWFLAKE_ROLE is set" || echo "SNOWFLAKE_ROLE is NOT set"
           test -n "$SNOWFLAKE_WAREHOUSE" && echo "SNOWFLAKE_WAREHOUSE is set" || echo "SNOWFLAKE_WAREHOUSE is NOT set"
