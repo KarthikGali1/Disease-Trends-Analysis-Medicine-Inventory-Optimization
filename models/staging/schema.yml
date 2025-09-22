@@ -23,7 +23,7 @@ models:
         tests: [not_null, unique]
 
   - name: stg_prescriptions
-    description: "Cleaned staging model for prescriptions"
+    description: "Cleaned  model for prescriptions"
     columns:
       - name: prescription_id
         tests: [not_null, unique]
