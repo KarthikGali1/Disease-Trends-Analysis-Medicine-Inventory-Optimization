@@ -8,5 +8,5 @@ SELECT
     MD5(TRIM(UPPER(rhs.severity_level)))::STRING AS severity_code,
     rhs.weather::STRING AS weather,
     CURRENT_TIMESTAMP()::TIMESTAMP_NTZ AS created_date
-FROM --RAW_HEALTHCARE_SURVEILLANCE
+FROM --RAW_HEALTHCARE_SURVEILLANC
     {{ source('raw', 'RAW_HEALTHCARE_SURVEILLANCE') }} AS rhs
