@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: raw
     database: RAW_DB_DEV
-    schema: SOURCE_S3
+    schema: STAGING
     tables:
       - name: RAW_PATIENTS
       - name: RAW_PRESCRIPTIONS
